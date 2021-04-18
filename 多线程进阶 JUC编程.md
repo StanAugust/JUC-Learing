@@ -1722,9 +1722,9 @@ public class TestFuture {
 
 ![image-20210407132449643](https://gitee.com/StanAugust/picbed/raw/master/img/20210407132449.png)
 
-不带Async的方法是由触发该任务的线程继续执行该任务，
+不带`Async`的方法是由触发该任务的线程继续执行该任务，
 
-带Async的方法是由触发该任务的线程将任务提交到线程池，执行任务的线程跟触发任务的线程不一定是同一个。
+带`Async`的方法是由触发该任务的线程将任务提交到线程池，执行任务的线程跟触发任务的线程不一定是同一个。
 
 以下所有方法都类同
 
@@ -2016,7 +2016,7 @@ JMM 定义了 8 个操作来完成主内存和工作内存之间的交互操作�
 
    ​	实现方式有所区别：
 
-   	+  `volatile` 关键字会禁止指令重排序
+   +  `volatile` 关键字会禁止指令重排序
 
    - `synchronized` 关键字通过互斥保证同一时刻只允许一条线程操作。
 
@@ -2101,7 +2101,7 @@ int y = -1;       //语句5
 
 ### 17.4 volatile的原理和实现机制
 
-加入volatile关键字后，会在编译期生成字节码时，多出一个lock前缀指令，这相当于一个内存屏障
+加入volatile关键字后，会在编译期生成字节码时，多出一个lock前缀指令，这相当于一个**内存屏障**
 
 JMM把内存屏障分为4类（Load表示读，Store表示写）：
 
@@ -2226,17 +2226,17 @@ public class OuterHolder {
 
 ![image-20210408194545863](https://gitee.com/StanAugust/picbed/raw/master/img/20210408194545.png)	
 
-> 在构造器中可添加第三重判断
+> 可在构造器中可添加第三重判断
 
 ![image-20210408195218987](https://gitee.com/StanAugust/picbed/raw/master/img/20210408195219.png)	
 
-> 如果实例均为反射创建，那么第三重锁失效
+> 但如果实例均为反射创建，那么第三重锁失效
 
 ![image-20210408195455419](https://gitee.com/StanAugust/picbed/raw/master/img/20210408195455.png)	
 
 因为`newInstance()`只是返回新建实例，并不会赋值给单例类中的`instance`，这样第三重锁中一直判断的instance为空
 
-> 优化第三重锁，使用额外标志位
+> 所以优化第三重锁，使用额外标志位
 
 ![image-20210408200746030](C:%5CUsers%5CStan%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210408200746030.png)	
 
@@ -2266,7 +2266,7 @@ public enum EnumSingle {
 
 ![image-20210408204740293](https://gitee.com/StanAugust/picbed/raw/master/img/20210408204740.png)	
 
-结论：枚举是实现单例模式的最佳方法。它更简洁，自动支持序列化机制，绝对防止多次实例化
+结论：**枚举是实现单例模式的最佳方法**。它更简洁，自动支持序列化机制，绝对防止多次实例化
 
 ---
 
@@ -2300,7 +2300,7 @@ public enum EnumSingle {
 
 CAS, Compare And Swap，比较并交换，其核心思想
 
-```
+```java
 执行函数：CAS(V,E,N)
  
     包含3个参数:
@@ -2309,7 +2309,7 @@ CAS, Compare And Swap，比较并交换，其核心思想
     N表示打算写入的新值
 ```
 
-只有内存位置V的值与预期原值E相匹配，处理器才会将该位置值更新为新值 N；否则会不断重试更新（自旋）
+只有内存位置`V`的值与预期原值`E`相匹配，处理器才会将该位置值更新为新值` N`；否则会不断重试更新（自旋）
 
 CAS是一种系统原语，是由若干条指令组成的，用于完成某个功能的一个过程，并且原语的**执行必须是连续的**，在执行过程中不允许被中断。也就是说CAS是一条CPU的原子指令，不会造成所谓的数据不一致问题。
 
@@ -2376,8 +2376,8 @@ public native Object allocateInstance(Class cls) throws InstantiationException;
 > CAS操作相关
 
 ```java
-//第一个参数o为给定对象，offset为对象内存的偏移量，通过这个偏移量迅速定位字段并设置或获取该字段的值，
-//expected表示期望值，x表示要设置的值，下面3个方法都通过CAS原子指令执行操作。
+// 第一个参数o为给定对象，offset为对象内存的偏移量，通过这个偏移量迅速定位字段并设置或获取该字段的值，
+// expected表示期望值，x表示要设置的值，下面3个方法都通过CAS原子指令执行操作。
 public final native boolean compareAndSwapObject(Object o, long offset,Object expected, Object x);                               
 public final native boolean compareAndSwapInt(Object o, long offset,int expected,int x);
 public final native boolean compareAndSwapLong(Object o, long offset,long expected,long x);
@@ -2386,10 +2386,10 @@ public final native boolean compareAndSwapLong(Object o, long offset,long expect
 > 线程挂起与恢复
 
 ```java
-//线程调用该方法，线程将一直阻塞直到超时，或者是中断条件出现。  
+// 线程调用该方法，线程将一直阻塞直到超时，或者是中断条件出现。  
 public native void park(boolean isAbsolute, long time);  
  
-//终止挂起的线程，恢复正常.java.util.concurrent包中挂起操作都是在LockSupport类实现的，其底层正是使用这两个方法，  
+// 终止挂起的线程，恢复正常.java.util.concurrent包中挂起操作都是在LockSupport类实现的，其底层正是使用这两个方法，  
 public native void unpark(Object thread);
 ```
 
@@ -2405,7 +2405,7 @@ public native void unpark(Object thread);
 
 ![image-20210409172911410](https://gitee.com/StanAugust/picbed/raw/master/img/20210409172911.png)	
 
-> 重要的成员变量：
+> 原子类中重要的成员变量：
 >
 > 1. 共享变量value
 > 2. unsafe实例用于调用CAS操作
@@ -2431,7 +2431,7 @@ public native void unpark(Object thread);
 
 对多个共享变量操作时，循环CAS就无法保证操作的原子性。
 
-这个时候就需要用到锁，或者使用`AtomicReference`类来保证引用**对象**之间的原子性（可以把多个变量放在一个对象里来进行CAS操作）
+这个时候就需要用到锁，或者使用`AtomicReference`类来保证引用**对象**之间的原子性（可以把            在一个对象里来进行CAS操作）
 
 ![image-20210409182823587](https://gitee.com/StanAugust/picbed/raw/master/img/20210409182823.png)	
 
