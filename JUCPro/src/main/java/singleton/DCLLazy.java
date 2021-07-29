@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 // 这种方式采用双锁机制，安全且在多线程情况下能保持高性能
 public class DCLLazy {
 	
+	// 添加标志位
 	private static boolean key = false;
 	
 	private DCLLazy() {
@@ -57,8 +58,8 @@ public class DCLLazy {
 		Field field = DCLLazy.class.getDeclaredField("key");
 		field.setAccessible(true);
 		
-		// 创建第一个实例后再把标志位改回去
 		DCLLazy instance1 = constructor.newInstance();
+		// 创建第一个实例后再把标志位改回去
 		field.set(instance1, false);
 		
 		DCLLazy instance2 = constructor.newInstance();
@@ -67,6 +68,8 @@ public class DCLLazy {
 		System.out.println(instance2);
 	}
 }
+
+
 
 
 

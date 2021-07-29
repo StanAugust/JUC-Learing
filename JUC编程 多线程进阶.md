@@ -655,6 +655,8 @@ public class Test3 {
 
 **原因：**static静态方法对于整个类Class来说只有一份，尽管有不同的对象，但使用的都是同一份方法。如果static方法使用synchronized锁定，那么这个synchronized会锁住整个对象！不管多少个对象，对于static的锁都只有一把锁，谁先拿到这个锁就先执行，其他的进程都需要等待！
 
+
+
 **问题7：**使用一个静态同步方法、一个同步方法、一个对象，执行顺序？
 
 ```java
@@ -2218,7 +2220,7 @@ public class OuterHolder {
 
 
 
-**反射可以破坏单例模式，以上代码并不安全！**
+==**反射可以破坏单例模式，以上代码并不安全！**==
 
 以DCL为例：
 
@@ -2238,7 +2240,9 @@ public class OuterHolder {
 
 > 所以优化第三重锁，使用额外标志位
 
-![image-20210408200746030](C:%5CUsers%5CStan%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20210408200746030.png)	
+![image-20210729174748608](https://gitee.com/StanAugust/picbed/raw/master/img/image-20210729174748608.png)	
+
+![image-20210729175056696](https://gitee.com/StanAugust/picbed/raw/master/img/image-20210729175056696.png)
 
 > 但是额外的标志位也不保证绝对的安全
 
